@@ -274,6 +274,12 @@
   .raise-table .now.up { color: var(--success); }
   .raise-table .now.down { color: var(--gray-dim); font-weight: 600; }
   .raise-table .now.flat { color: var(--gray-dim); font-weight: 600; }
+  .raise-table .delta {
+    color: var(--success);
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+  }
   .raise-table td.pos { color: var(--dark); font-weight: 600; }
   .raise-table .footnote {
     padding-top: 8px;
@@ -1163,7 +1169,7 @@
       <div class="change-card">
         <span class="tag">Renamed + simplified</span>
         <h4>Co-Pilot is now "Lead In Training"</h4>
-        <p>Same role, clearer name. The job is — and always was — a stepping stone to Lead. We're naming it what it actually is. Pay also gets simpler: <b>flat <span id="card1BodyBase">$19</span>/hr, no performance bonus</b>. The floor is the floor.</p>
+        <p>Same role, clearer name. You're hired into the Lead track from day one — "Lead In Training" is what you're called while you train and wait for a Jr. Lead seat to open at your branch. Pay also gets simpler: <b>flat <span id="card1BodyBase">$19</span>/hr, no performance bonus</b>. The floor is the floor.</p>
         <table class="raise-table">
           <tr>
             <td class="pos">Title</td>
@@ -1184,7 +1190,7 @@
         <p>Every position on the ladder moves up. Lead In Training gets +$2.00. Every Lead position gets at least +$1.50. Lead General gets the biggest base bump at +$2.50.</p>
         <table class="raise-table">
           <thead>
-            <tr><th>Position</th><th>Was</th><th>Now</th></tr>
+            <tr><th>Position</th><th>Was</th><th>Now</th><th>Raise</th></tr>
           </thead>
           <tbody id="baseRaiseBody"><!-- branch-aware, rendered by JS --></tbody>
         </table>
@@ -1899,11 +1905,17 @@
   function renderBaseRaiseTable() {
     const host = document.getElementById('baseRaiseBody');
     if (!host) return;
-    host.innerHTML = POSITIONS.map(p => `<tr>
+    host.innerHTML = POSITIONS.map(p => {
+      const was = wasBaseFor(p.id);
+      const now = baseFor(p.id);
+      const delta = now - was;
+      return `<tr>
         <td class="pos">${p.name}</td>
-        <td class="was">${fmt(wasBaseFor(p.id))}</td>
-        <td class="now up">${fmt(baseFor(p.id))}</td>
-      </tr>`).join('');
+        <td class="was">${fmt(was)}</td>
+        <td class="now up">${fmt(now)}</td>
+        <td class="delta">+$${delta.toFixed(2)}</td>
+      </tr>`;
+    }).join('');
   }
 
   /* Inline-span hydration (Card 1, PT callout, staircase, worked example) */
