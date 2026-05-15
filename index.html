@@ -1190,7 +1190,7 @@
         <p>Every position on the ladder moves up. Lead In Training gets +$2.00. Every Lead position gets at least +$1.50. Lead General gets the biggest base bump at +$2.50.</p>
         <table class="raise-table">
           <thead>
-            <tr><th>Position</th><th>Was</th><th>Now</th><th>Raise</th></tr>
+            <tr><th>Position</th><th>Was</th><th>Now</th></tr>
           </thead>
           <tbody id="baseRaiseBody"><!-- branch-aware, rendered by JS --></tbody>
         </table>
@@ -1905,17 +1905,11 @@
   function renderBaseRaiseTable() {
     const host = document.getElementById('baseRaiseBody');
     if (!host) return;
-    host.innerHTML = POSITIONS.map(p => {
-      const was = wasBaseFor(p.id);
-      const now = baseFor(p.id);
-      const delta = now - was;
-      return `<tr>
+    host.innerHTML = POSITIONS.map(p => `<tr>
         <td class="pos">${p.name}</td>
-        <td class="was">${fmt(was)}</td>
-        <td class="now up">${fmt(now)}</td>
-        <td class="delta">+$${delta.toFixed(2)}</td>
-      </tr>`;
-    }).join('');
+        <td class="was">${fmt(wasBaseFor(p.id))}</td>
+        <td class="now up">${fmt(baseFor(p.id))}</td>
+      </tr>`).join('');
   }
 
   /* Inline-span hydration (Card 1, PT callout, staircase, worked example) */
