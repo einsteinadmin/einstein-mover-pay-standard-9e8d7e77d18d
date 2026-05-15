@@ -1524,7 +1524,7 @@
         <div class="stair-num">~480<small>hrs</small></div>
         <div class="stair-body">
           <strong>Earn your star · Promoted to Jr. Lead</strong>
-          <small>About 3 months working full-time. Complete the handbook + show you can lead a job. Base bumps from <span id="stairLitBase">$19</span> to <span id="stairJrBase">$20</span> and bonus opens up.</small>
+          <small>About 3 months working full-time. Complete the handbook + show you can lead a job <b>+ solid performance</b>. Base bumps from <span id="stairLitBase">$19</span> to <span id="stairJrBase">$20</span> and bonus opens up.</small>
         </div>
         <div class="stair-pos">Jr. Lead</div>
       </div>
@@ -1533,7 +1533,7 @@
         <div class="stair-num">962<small>hrs</small></div>
         <div class="stair-body">
           <strong>Regular Lead</strong>
-          <small>About 6 months working full-time. Sustained medium-to-high individual performance.</small>
+          <small>About 6 months working full-time <i>as a Jr. Lead</i>. Sustained medium-to-high individual performance.</small>
         </div>
         <div class="stair-pos">Reg. Lead</div>
       </div>
@@ -1542,7 +1542,7 @@
         <div class="stair-num">962<small>+hrs</small></div>
         <div class="stair-body">
           <strong>Senior Lead</strong>
-          <small>Another 6 months in role at full-time hours with sustained medium-to-high performance.</small>
+          <small>About 6 months working full-time <i>as a Regular Lead</i>. Sustained medium-to-high individual performance.</small>
         </div>
         <div class="stair-pos">Sr. Lead</div>
       </div>
@@ -1551,7 +1551,7 @@
         <div class="stair-num">962<small>+hrs</small></div>
         <div class="stair-body">
           <strong>Master Lead</strong>
-          <small>Sustained <b>high</b> individual performance. 5 days vacation unlocks here.</small>
+          <small>About 6 months working full-time <i>as a Senior Lead</i>. Sustained high individual performance. 5 days vacation unlocks here.</small>
         </div>
         <div class="stair-pos">Master</div>
       </div>
@@ -1560,7 +1560,7 @@
         <div class="stair-num">1,924<small>hrs</small></div>
         <div class="stair-body">
           <strong>Lead General</strong>
-          <small>About 12 months working full-time. Sustained high individual performance. 10 days vacation.</small>
+          <small>About 12 months working full-time <i>as a Master Lead</i>. Sustained high individual performance. 10 days total vacation unlocks here.</small>
         </div>
         <div class="stair-pos">Lead Gen</div>
       </div>
@@ -1814,19 +1814,19 @@
       gate: 'Entry-level position while completing handbook + training. Designed as a transitional role — target time 3–6 months before promotion.' },
     { id: 'jr',       name: 'Jr. Lead',         short: 'Jr. Lead',  group: 'lead',   rung: 2, kind: 'rung',
       base: 20.00, varMax: 2.00, pto: 0,
-      gate: 'Earned your star. Complete handbook + show you can lead a job.' },
+      gate: 'Earn your star. Complete handbook + show you can lead a job + solid performance.' },
     { id: 'reg',      name: 'Regular Lead',     short: 'Reg. Lead', group: 'lead',   rung: 3, kind: 'rung',
       base: 20.50, varMax: 2.25, pto: 0,
-      gate: 'About 962 hours worked (~6 months working full-time). Sustained medium-to-high individual performance.' },
+      gate: 'About 6 months working full-time as a Jr. Lead. Sustained medium-to-high individual performance.' },
     { id: 'sr',       name: 'Sr. Lead',         short: 'Sr. Lead',  group: 'lead',   rung: 4, kind: 'rung',
       base: 21.00, varMax: 2.50, pto: 0,
-      gate: 'Another ~962 hours in role (~6 months working full-time). Sustained medium-to-high individual performance.' },
+      gate: 'About 6 months working full-time as a Regular Lead. Sustained medium-to-high individual performance.' },
     { id: 'master',   name: 'Master Lead',      short: 'Master',    group: 'master', rung: 5, kind: 'rung',
       base: 21.50, varMax: 2.75, pto: 5,
-      gate: 'Sustained HIGH individual performance in Sr. Lead role. 5 days vacation unlocks here.' },
+      gate: 'About 6 months working full-time as a Senior Lead. Sustained high individual performance. 5 days vacation unlocks here.' },
     { id: 'general',  name: 'Lead General',     short: 'Lead Gen',  group: 'master', rung: 6, kind: 'rung',
       base: 22.00, varMax: 3.00, pto: 10,
-      gate: 'About 1,924 hours worked (~12 months working full-time). Sustained HIGH individual performance. 10 days vacation. Hall of Fame honor lives here.' },
+      gate: 'About 12 months working full-time as a Master Lead. Sustained high individual performance. 10 days total vacation. Hall of Fame honor lives here.' },
 
     /* Part-Time Lead is a pay arrangement, not a destination rung.
      * Modeler tracks it as a blended rate ($20.50/$0.75) for affordability math,
