@@ -579,6 +579,100 @@
   .metric-mobile .pp-list .pts { font-weight: 700; color: var(--gray-dim); }
   .metric-mobile .pp-list .thr { color: var(--dark); }
 
+  /* Mobile-only "View as full grid" trigger button */
+  .matrix-zoom-btn { display: none; }
+  @media (max-width: 720px) {
+    .matrix-zoom-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      background: var(--white);
+      color: var(--blue);
+      border: 1px solid var(--gray-line);
+      padding: 11px 14px;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      margin: 6px 0 18px;
+      cursor: pointer;
+      transition: border-color 120ms, box-shadow 120ms;
+    }
+    .matrix-zoom-btn:hover, .matrix-zoom-btn:active {
+      border-color: var(--orange);
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  /* Matrix modal — fullscreen lightbox for the desktop-width table */
+  .matrix-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.85);
+    padding: 16px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .matrix-modal.open { display: block; }
+  .matrix-modal-inner {
+    background: white;
+    border-radius: var(--radius);
+    width: 100%;
+    max-width: 980px;
+    margin: 32px auto;
+    padding: 22px 18px 18px;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+  }
+  .matrix-modal-close {
+    position: absolute;
+    top: -14px;
+    right: -14px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--dark);
+    color: white;
+    border: 2px solid white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    box-shadow: var(--shadow-md);
+  }
+  .matrix-modal-close:hover { background: var(--orange); }
+  .matrix-modal-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-dim);
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .matrix-modal-hint {
+    font-size: 12px;
+    color: var(--gray-dim);
+    margin: 0 0 12px;
+  }
+  .matrix-modal-host {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Force the table to render at desktop width inside the modal */
+  .matrix-modal-host .matrix-wrap {
+    display: block !important;
+    overflow-x: visible;
+    margin: 0;
+    border: 1px solid var(--gray-line);
+  }
+
   /* Void-clause callout */
   .void-callout {
     background: #FFF8E1;
@@ -1364,6 +1458,21 @@
 
       </div>
 
+      <!-- Mobile-only: open the original desktop matrix in a fullscreen modal -->
+      <button class="matrix-zoom-btn" type="button" onclick="openMatrixModal()" aria-label="View the original performance matrix as a full grid">
+        <span aria-hidden="true">🔍</span> View as a full grid
+      </button>
+
+      <!-- Matrix modal (built once, populated on demand) -->
+      <div class="matrix-modal" id="matrixModal" role="dialog" aria-modal="true" aria-labelledby="matrixModalTitle">
+        <div class="matrix-modal-inner">
+          <button class="matrix-modal-close" type="button" onclick="closeMatrixModal()" aria-label="Close">&times;</button>
+          <p class="matrix-modal-title" id="matrixModalTitle">The Lead Performance Matrix</p>
+          <p class="matrix-modal-hint">Scroll horizontally inside the grid if needed. Tap outside or × to close.</p>
+          <div class="matrix-modal-host" id="matrixModalHost"></div>
+        </div>
+      </div>
+
       <p style="font-size:13px; color:var(--gray-dim); margin:8px 0 22px;">
         <b>How to read it:</b> Each quarter you earn 0–10 pinpoints per metric. Multiply your pinpoints by the metric's weight (treated as a decimal: 34 = .34) to get points. Sum across all metrics = your <b>Quarterly Score</b>, on a 0–10 scale. A Quarterly Score of 8/10 means you earn 80% of your position's max bonus for the quarter. Same matrix at every Lead rung — Jr. Lead through Lead General.
       </p>
@@ -1889,6 +1998,37 @@
   renderLadder();
   renderInlineNumbers();
   recalc();
+
+  /* ─────────────────────────────────────────────────────────────────
+   * Matrix lightbox modal — clones the in-page .matrix-wrap into the
+   * modal on open so we don't have two divergent copies in the DOM.
+   * ───────────────────────────────────────────────────────────────── */
+  function openMatrixModal() {
+    const src = document.querySelector('.matrix-wrap');
+    const host = document.getElementById('matrixModalHost');
+    if (src && host) {
+      host.innerHTML = '';
+      host.appendChild(src.cloneNode(true));
+    }
+    const modal = document.getElementById('matrixModal');
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => modal.querySelector('.matrix-modal-close')?.focus(), 50);
+  }
+  function closeMatrixModal() {
+    document.getElementById('matrixModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('matrixModal').addEventListener('click', (e) => {
+    if (e.target.id === 'matrixModal') closeMatrixModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.getElementById('matrixModal').classList.contains('open')) {
+      closeMatrixModal();
+    }
+  });
+  window.openMatrixModal = openMatrixModal;
+  window.closeMatrixModal = closeMatrixModal;
 
   /* Onboarding mode flip via URL `?mode=onboarding`.
    * In Q3 when announcement skin is stale, body[data-mode] gets set
