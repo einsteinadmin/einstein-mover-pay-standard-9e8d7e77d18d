@@ -881,8 +881,23 @@
     font-weight: 800;
     margin-bottom: 10px;
   }
-  .benefit h4 { font-size: 14.5px; margin-bottom: 4px; }
+  .benefit { position: relative; }
+  .benefit h4 { font-size: 14.5px; margin-bottom: 4px; padding-right: 88px; }
   .benefit p { font-size: 13px; color: var(--gray); margin: 0; }
+  .benefit-tag {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 7px;
+    border-radius: 999px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .benefit-tag.ft { background: #FFF1DF; color: #B45309; }
 
   /* ─── Section 6 — Rung Calculator ──────────────────── */
   .calc {
@@ -1589,13 +1604,13 @@
 
       <div class="benefit"><div class="b-icon">$5</div><h4>On-call bonus</h4><p>Extra $5/hr any time we call you in last-minute.</p></div>
 
-      <div class="benefit"><div class="b-icon">👶</div><h4>Parental leave</h4><p>1 week paid. Bumps to 2 weeks after a year of work (part-time hours count too).</p></div>
+      <div class="benefit"><span class="benefit-tag ft">Full-Time Only</span><div class="b-icon">👶</div><h4>Parental leave</h4><p>1 week paid. Bumps to 2 weeks after a year of work.</p></div>
 
-      <div class="benefit"><div class="b-icon">🕊</div><h4>Bereavement</h4><p>2 days paid. As much unpaid time as you need.</p></div>
+      <div class="benefit"><span class="benefit-tag ft">Full-Time Only</span><div class="b-icon">🕊</div><h4>Bereavement</h4><p>2 days paid. As much unpaid time as you need.</p></div>
 
       <div class="benefit"><div class="b-icon">401K</div><h4>401(k) with 4% match</h4><p>We match up to 4%. Free money — take it.</p></div>
 
-      <div class="benefit"><div class="b-icon">+</div><h4>Health, dental, vision</h4><p>Company contributions toward medical premiums. Dental and vision plans available.</p></div>
+      <div class="benefit"><span class="benefit-tag ft">Full-Time Only</span><div class="b-icon">+</div><h4>Health, dental, vision</h4><p>Company contributions toward medical premiums. Dental and vision plans available.</p></div>
 
       <div class="benefit"><div class="b-icon">🗓</div><h4>Unlimited unpaid time off</h4><p>Take what you need with manager approval. Flexible scheduling baked in.</p></div>
 
@@ -1658,7 +1673,7 @@
           <div class="calc-tile"><div class="lbl">Base pay</div><div class="val" id="outBase">$??.??</div></div>
           <div class="calc-tile"><div class="lbl">Performance bonus</div><div class="val" id="outBonus">$??.??</div></div>
           <div class="calc-tile"><div class="lbl">Tips (estimated)</div><div class="val" id="outTips">$??.??</div></div>
-          <div class="calc-tile"><div class="lbl">Weekly take-home (est.)</div><div class="val" id="outWeekly">$???</div></div>
+          <div class="calc-tile"><div class="lbl">Weekly gross pay (est.)</div><div class="val" id="outWeekly">$???</div></div>
           <div class="calc-tile"><div class="lbl">Quarterly bonus payout</div><div class="val" id="outQuarterly">$???</div></div>
           <div class="calc-tile"><div class="lbl">Promotion gate</div><div class="val" id="outGate" style="font-size:13px; line-height:1.3;">—</div></div>
         </div>
