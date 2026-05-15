@@ -1,0 +1,1905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<title>Internal Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --orange: #EF8B22;
+    --orange-soft: #FFF1DF;
+    --gray: #53575A;
+    --gray-dim: #7B7F82;
+    --gray-line: #E5E5E7;
+    --blue: #0979C3;
+    --dark: #27343D;
+    --light: #F6F6F6;
+    --white: #FFFFFF;
+    --success: #69995D;
+    --warn: #CC8400;
+    --warn-bg: #FFF8E1;
+    --error: #CC0100;
+    --radius: 10px;
+    --radius-lg: 14px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+    --shadow-lg: 0 10px 28px rgba(0,0,0,0.10);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 78px; }
+  body {
+    margin: 0;
+    font-family: 'Roboto', system-ui, sans-serif;
+    color: var(--gray);
+    background: var(--light);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Lock-date banner ─────────────────────────────── */
+  .lock-banner {
+    background: var(--warn-bg);
+    border-bottom: 2px solid var(--warn);
+    color: #6B4400;
+    padding: 10px 24px;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    letter-spacing: 0.01em;
+  }
+  .lock-banner b { color: var(--warn); }
+
+  /* ─── Sticky nav ───────────────────────────────────── */
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-line);
+    box-shadow: var(--shadow-sm);
+  }
+  .nav-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .nav-brand {
+    font-weight: 900;
+    font-size: 18px;
+    color: var(--dark);
+    letter-spacing: -0.01em;
+  }
+  .nav-brand span { color: var(--orange); }
+  .nav-links {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+    flex-wrap: wrap;
+  }
+  .nav-links a {
+    color: var(--gray);
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: background 120ms;
+  }
+  .nav-links a:hover { background: var(--light); color: var(--dark); }
+  @media (max-width: 720px) {
+    .nav-inner { padding: 10px 16px; gap: 10px; flex-wrap: wrap; }
+    .nav-brand { font-size: 16px; flex: 1 1 100%; }
+    .nav-links {
+      gap: 2px;
+      margin-left: 0;
+      width: 100%;
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      padding-bottom: 2px;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      font-size: 12.5px;
+      padding: 5px 9px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  }
+
+  /* ─── Layout ───────────────────────────────────────── */
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  section { margin-bottom: 56px; scroll-margin-top: 88px; }
+  h1, h2, h3, h4 { color: var(--dark); margin: 0; line-height: 1.2; }
+  h1 { font-size: clamp(28px, 4vw, 42px); font-weight: 900; letter-spacing: -0.02em; }
+  h2 { font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; margin-bottom: 6px; }
+  .sub { color: var(--gray-dim); font-size: 15px; margin-bottom: 22px; }
+
+  /* ─── Hero ─────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #fff 0%, #FFF8EE 100%);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius-lg);
+    padding: clamp(28px, 4vw, 48px);
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 240px; height: 240px;
+    background: var(--orange);
+    opacity: 0.08;
+    border-radius: 50%;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--orange);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 5px 11px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .hero h1 { margin-bottom: 12px; }
+  .hero .lede {
+    font-size: clamp(15px, 1.6vw, 18px);
+    color: var(--gray);
+    max-width: 720px;
+    margin: 0;
+  }
+  .hero-cta-row {
+    margin-top: 22px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 18px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 120ms, box-shadow 120ms;
+  }
+  .btn-primary { background: var(--blue); color: white; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-ghost { background: transparent; color: var(--gray); border: 1px solid var(--gray-line); }
+  .btn-ghost:hover { background: var(--white); border-color: var(--gray); }
+
+  /* ─── Placeholder pill ─────────────────────────────── */
+  .ph {
+    display: inline-block;
+    background: var(--warn-bg);
+    color: var(--warn);
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 4px;
+    border: 1px dashed var(--warn);
+    font-variant-numeric: tabular-nums;
+  }
+  .ph::after { content: ' ?'; opacity: 0.6; }
+
+  /* ─── Section 1 — What's Changing ──────────────────── */
+  .change-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .change-card {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-top: 4px solid var(--orange);
+    border-radius: var(--radius);
+    padding: 22px 20px 20px;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+  .change-card .tag {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+  .change-card h4 { font-size: 16px; margin-bottom: 10px; line-height: 1.25; }
+  .change-card .from-to {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--gray-line);
+    font-size: 13px;
+    color: var(--gray-dim);
+  }
+  .change-card .from-to b { color: var(--dark); }
+  .change-card .arrow { color: var(--orange); margin: 0 6px; font-weight: 700; }
+
+  /* Compact data tables inside change cards */
+  .raise-table {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--gray-line);
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .raise-table th {
+    text-align: left;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-dim);
+    font-weight: 700;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .raise-table th:not(:first-child) { text-align: right; }
+  .raise-table td {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .raise-table tr:last-child td { border-bottom: none; }
+  .raise-table td:not(:first-child) {
+    text-align: right;
+  }
+  .raise-table .was {
+    color: var(--gray-dim);
+    text-decoration: line-through;
+    text-decoration-color: rgba(0,0,0,0.25);
+  }
+  .raise-table .now { color: var(--dark); font-weight: 700; }
+  .raise-table .now.up { color: var(--success); }
+  .raise-table .now.down { color: var(--gray-dim); font-weight: 600; }
+  .raise-table .now.flat { color: var(--gray-dim); font-weight: 600; }
+  .raise-table td.pos { color: var(--dark); font-weight: 600; }
+  .raise-table .footnote {
+    padding-top: 8px;
+    font-size: 11.5px;
+    color: var(--gray-dim);
+    font-style: italic;
+  }
+
+  /* Part-Time Lead callout */
+  .pt-callout {
+    background: linear-gradient(135deg, #F0EBF7 0%, #FAF5FF 100%);
+    border: 1px solid #D4C3E8;
+    border-left: 4px solid #5E3FA3;
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-top: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .pt-callout h4 {
+    color: #5E3FA3;
+    font-size: 16px;
+    margin-bottom: 10px;
+  }
+  .pt-callout p { margin: 0 0 10px; font-size: 14px; color: var(--dark); }
+  .pt-callout p:last-child { margin-bottom: 0; }
+  .pt-callout .pt-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  @media (max-width: 600px) { .pt-callout .pt-grid { grid-template-columns: 1fr; } }
+  .pt-callout .pt-card {
+    background: white;
+    border-radius: 8px;
+    padding: 14px 16px;
+    border: 1px solid #E4D8F2;
+  }
+  .pt-callout .pt-card .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: #5E3FA3;
+    margin-bottom: 6px;
+  }
+  .pt-callout .pt-card .val {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+    font-variant-numeric: tabular-nums;
+  }
+  .pt-callout .pt-card .sub {
+    font-size: 12.5px;
+    color: var(--gray-dim);
+    margin: 4px 0 0;
+  }
+
+  /* ─── Section 2 — Pay Ladder ───────────────────────── */
+  .ladder {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .rung {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+    transition: transform 120ms, box-shadow 120ms, border-color 120ms;
+    position: relative;
+  }
+  .rung:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--orange); }
+  .rung-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .rung-dots {
+    display: inline-flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .rung-dots .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gray-line);
+  }
+  .rung-dots .dot.active { background: var(--orange); }
+  .rung-label {
+    font-size: 11.5px;
+    color: var(--gray-dim);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .rung h3 { font-size: 19px; margin-bottom: 4px; }
+  .rung-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 12px 0;
+    padding: 12px 0;
+    border-top: 1px solid var(--gray-line);
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .rung-stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-dim);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .rung-stat-val {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--dark);
+    font-variant-numeric: tabular-nums;
+  }
+  .rung-high {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--orange);
+    margin: 6px 0;
+  }
+  .rung-high-label {
+    font-size: 12px;
+    color: var(--gray-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+  .rung-gate {
+    font-size: 13px;
+    color: var(--gray);
+    margin-top: 8px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--gray-line);
+  }
+  .rung-gate b { color: var(--dark); }
+  .rung-pto {
+    display: inline-block;
+    margin-top: 6px;
+    background: #F0EBF7;
+    color: #5E3FA3;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  /* ─── Section 3 — Performance Bonus ────────────────── */
+  /* Performance matrix (the actual Lead matrix) */
+  .matrix-wrap {
+    margin: 20px 0;
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    overflow-x: auto;
+    box-shadow: var(--shadow-sm);
+  }
+  .perf-matrix {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .perf-matrix th, .perf-matrix td {
+    padding: 9px 7px;
+    text-align: center;
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .perf-matrix thead th { font-weight: 700; }
+  .perf-matrix .band-low {
+    background: #FCE7E5; color: #B22; letter-spacing: 0.04em;
+    font-size: 11.5px; text-transform: uppercase;
+  }
+  .perf-matrix .band-med {
+    background: #FFF8E1; color: #8A6300; letter-spacing: 0.04em;
+    font-size: 11.5px; text-transform: uppercase;
+  }
+  .perf-matrix .band-high {
+    background: #E8F5EC; color: #2E5C28; letter-spacing: 0.04em;
+    font-size: 11.5px; text-transform: uppercase;
+  }
+  .perf-matrix .pts-row th {
+    background: var(--light); font-weight: 700; color: var(--gray-dim);
+    font-size: 12.5px; padding: 7px;
+  }
+  .perf-matrix .pts-low { background: #FCE7E5; color: #B22; }
+  .perf-matrix .pts-med { background: #FFF8E1; color: #8A6300; }
+  .perf-matrix .pts-high { background: #E8F5EC; color: #2E5C28; }
+  .perf-matrix tbody td { font-size: 12.5px; color: var(--gray); }
+  .perf-matrix .m-name {
+    text-align: left;
+    padding-left: 14px;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 13.5px;
+    max-width: 200px;
+  }
+  .perf-matrix .m-name small {
+    display: block;
+    font-weight: 400;
+    color: var(--gray-dim);
+    font-size: 11.5px;
+    margin-top: 2px;
+    line-height: 1.35;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .perf-matrix tbody tr.pending td { opacity: 0.55; }
+  .perf-matrix tbody tr.pending .m-name::after {
+    content: ' · pending';
+    font-style: italic;
+    font-weight: 400;
+    color: var(--warn);
+    font-size: 11.5px;
+  }
+  .perf-matrix th.col-weight, .perf-matrix td.col-weight {
+    font-weight: 700;
+    background: var(--orange-soft);
+    color: var(--orange);
+    border-left: 1px solid var(--gray-line);
+  }
+  .perf-matrix tbody tr:last-child td { border-bottom: none; }
+
+  /* Mobile matrix — stacked metric cards under 720px,
+   * grouped by performance band (Low/Med/High). Replaces
+   * horizontal-scrolling table for phone readability. */
+  .matrix-mobile { display: none; }
+  @media (max-width: 720px) {
+    .matrix-wrap { display: none; }
+    .matrix-mobile { display: block; margin: 18px 0; }
+  }
+  .metric-mobile {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+  }
+  .metric-mobile.pending { opacity: 0.6; }
+  .metric-mobile .mm-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 4px;
+  }
+  .metric-mobile h4 {
+    font-size: 15px;
+    line-height: 1.25;
+    margin: 0;
+    flex: 1;
+    min-width: 0;
+  }
+  .metric-mobile .weight-pill {
+    font-size: 10.5px;
+    font-weight: 800;
+    background: var(--orange-soft);
+    color: var(--orange);
+    padding: 3px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+    letter-spacing: 0.04em;
+  }
+  .metric-mobile .desc {
+    font-size: 12.5px;
+    color: var(--gray-dim);
+    margin: 0 0 12px;
+    line-height: 1.4;
+  }
+  .metric-mobile .band-block { margin-bottom: 10px; }
+  .metric-mobile .band-block:last-child { margin-bottom: 0; }
+  .metric-mobile .band-label {
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 6px;
+  }
+  .metric-mobile .band-label.low { background: #FCE7E5; color: #8B1A1A; }
+  .metric-mobile .band-label.med { background: #FFF8E1; color: #8A6300; }
+  .metric-mobile .band-label.high { background: #E8F5EC; color: #2E5C28; }
+  .metric-mobile .pp-list {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 12px;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    padding-left: 4px;
+  }
+  .metric-mobile .pp-list .pts { font-weight: 700; color: var(--gray-dim); }
+  .metric-mobile .pp-list .thr { color: var(--dark); }
+
+  /* Void-clause callout */
+  .void-callout {
+    background: #FFF8E1;
+    border-left: 4px solid var(--warn);
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    margin-top: 18px;
+  }
+  .void-callout h4 {
+    color: var(--warn);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+  .void-callout ul { margin: 0; padding-left: 20px; font-size: 13.5px; color: var(--dark); }
+  .void-callout li { margin-bottom: 5px; }
+  .void-callout li b { color: var(--dark); }
+
+  /* "Who this applies to" header line */
+  .applies-to {
+    background: var(--orange-soft);
+    color: var(--orange);
+    padding: 11px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 18px;
+    font-size: 13.5px;
+    font-weight: 600;
+    border-left: 4px solid var(--orange);
+  }
+  .applies-to b { color: var(--dark); }
+
+  .bonus-shell {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-sm);
+  }
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .metric {
+    background: var(--light);
+    border-radius: var(--radius);
+    padding: 16px;
+    border-left: 4px solid var(--orange);
+  }
+  .metric .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--gray-dim);
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .metric .name { font-size: 16px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .metric .desc { font-size: 13px; color: var(--gray); }
+  .metric.individual { border-left-color: var(--blue); }
+  .metric.team { border-left-color: var(--orange); }
+
+  .tier-bar {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    margin-top: 18px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--gray-line);
+  }
+  .tier {
+    padding: 18px;
+    text-align: center;
+  }
+  .tier-low { background: #FFF8E1; }
+  .tier-med { background: #FFE9CC; }
+  .tier-high { background: var(--orange); color: white; }
+  .tier-tier {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin-bottom: 4px;
+    opacity: 0.85;
+  }
+  .tier-pct { font-size: 26px; font-weight: 900; }
+  .tier-label { font-size: 13px; margin-top: 4px; opacity: 0.9; }
+
+  .worked-example {
+    margin-top: 22px;
+    padding: 18px 20px;
+    background: var(--orange-soft);
+    border-radius: var(--radius);
+    border: 1px solid #FCE0BD;
+  }
+  .worked-example h4 {
+    color: var(--orange);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .worked-example p { margin: 0; color: var(--dark); font-size: 14.5px; }
+
+  /* ─── Section 4 — Promotion Milestones ─────────────── */
+  .stair {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    max-width: 760px;
+  }
+  .stair-step {
+    display: grid;
+    grid-template-columns: 90px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+  }
+  .stair-num {
+    font-size: 26px;
+    font-weight: 900;
+    color: var(--orange);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .stair-num small {
+    display: block;
+    font-size: 11px;
+    color: var(--gray-dim);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+  .stair-body strong { color: var(--dark); }
+  .stair-body small { display: block; color: var(--gray-dim); font-size: 13px; margin-top: 2px; }
+  .stair-pos {
+    background: var(--orange-soft);
+    color: var(--orange);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  @media (max-width: 600px) {
+    .stair-step {
+      grid-template-columns: 1fr auto;
+      gap: 8px 12px;
+      padding: 14px 16px;
+    }
+    .stair-num {
+      grid-column: 1 / -1;
+      text-align: left;
+      font-size: 22px;
+    }
+    .stair-num small {
+      display: inline;
+      margin-left: 4px;
+    }
+    .stair-body {
+      grid-column: 1;
+    }
+    .stair-pos {
+      grid-column: 2;
+      align-self: start;
+      white-space: nowrap;
+    }
+  }
+
+  /* ─── Section 5 — Benefits ─────────────────────────── */
+  .benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .benefit {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .benefit .b-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px; height: 32px;
+    background: var(--orange-soft);
+    color: var(--orange);
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .benefit h4 { font-size: 14.5px; margin-bottom: 4px; }
+  .benefit p { font-size: 13px; color: var(--gray); margin: 0; }
+
+  /* ─── Section 6 — Rung Calculator ──────────────────── */
+  .calc {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    box-shadow: var(--shadow-md);
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 28px;
+  }
+  @media (max-width: 800px) {
+    .calc { grid-template-columns: 1fr; }
+  }
+  .calc-controls h3 {
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-dim);
+    margin-bottom: 14px;
+  }
+  .field { margin-bottom: 16px; }
+  .field label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-dim);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .field select, .field input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--gray-line);
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--dark);
+    background: var(--white);
+  }
+  .field select:focus, .field input:focus {
+    outline: none;
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(239,139,34,0.15);
+  }
+  .pill-group {
+    display: flex;
+    gap: 6px;
+  }
+  .pill {
+    flex: 1;
+    padding: 9px 10px;
+    text-align: center;
+    border: 1px solid var(--gray-line);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--gray);
+    background: var(--white);
+    transition: all 120ms;
+  }
+  .pill.active { background: var(--orange); color: white; border-color: var(--orange); }
+
+  .calc-output {
+    background: var(--light);
+    border-radius: var(--radius);
+    padding: 22px;
+  }
+  .calc-headline {
+    font-size: clamp(28px, 4vw, 38px);
+    font-weight: 900;
+    color: var(--orange);
+    line-height: 1.1;
+    margin: 4px 0 8px;
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-sub {
+    font-size: 14px;
+    color: var(--gray-dim);
+    margin-bottom: 18px;
+  }
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .calc-tile {
+    background: var(--white);
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid var(--gray-line);
+  }
+  .calc-tile .lbl {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--gray-dim);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .calc-tile .val {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-note {
+    font-size: 12px;
+    color: var(--gray-dim);
+    line-height: 1.5;
+    padding-top: 14px;
+    border-top: 1px dashed var(--gray-line);
+  }
+
+  /* ─── Section 7 — What Changed & Why ───────────────── */
+  .policy-list {
+    background: var(--white);
+    border: 1px solid var(--gray-line);
+    border-radius: var(--radius);
+    padding: 8px 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .policy-list details {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .policy-list details:last-child { border-bottom: none; }
+  .policy-list summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--dark);
+    font-size: 15.5px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .policy-list summary::-webkit-details-marker { display: none; }
+  .policy-list summary::before {
+    content: '+';
+    color: var(--orange);
+    font-weight: 900;
+    font-size: 22px;
+    transition: transform 200ms;
+    display: inline-block;
+    width: 18px;
+  }
+  .policy-list details[open] summary::before { content: '–'; }
+  .policy-list .body { padding: 10px 0 4px 28px; color: var(--gray); font-size: 14.5px; }
+  .policy-list .body p { margin: 0 0 8px; }
+  .policy-list .body p:last-child { margin-bottom: 0; }
+
+  /* ─── Section 8 — FAQ (same look as policy) ────────── */
+  .faq { /* uses .policy-list styles */ }
+
+  /* ─── Section 9 — Contact ──────────────────────────── */
+  .contact {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .contact-card {
+    background: var(--white);
+    border-left: 4px solid var(--orange);
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+  }
+  .contact-card h4 { font-size: 15px; margin-bottom: 6px; }
+  .contact-card p { font-size: 13.5px; color: var(--gray); margin: 0; }
+
+  /* ─── Footer ───────────────────────────────────────── */
+  footer {
+    text-align: center;
+    color: var(--gray-dim);
+    font-size: 12px;
+    padding-top: 32px;
+    border-top: 1px solid var(--gray-line);
+    margin-top: 60px;
+  }
+
+  /* ─── Onboarding mode (announcement skin off) ──────── */
+  body[data-mode="onboarding"] [data-skin="announcement"] { display: none; }
+  body[data-mode="onboarding"] .lock-banner { display: none; }
+
+  /* ─── Branch picker bar ───────────────────────────── */
+  .branch-bar {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-line);
+    padding: 12px 24px;
+    box-shadow: var(--shadow-sm);
+  }
+  .branch-bar-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 14px;
+  }
+  .branch-bar .label {
+    font-weight: 600;
+    color: var(--gray-dim);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .market-list {
+    color: var(--dark);
+    font-size: 13.5px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body data-mode="announcement">
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     LOCK-DATE BANNER (visible only while numbers are placeholders)
+     ═══════════════════════════════════════════════════════════════════ -->
+<!-- TODO before deploy: replace "Rolling out soon" with the locked effective date (e.g. "Rolling out June 1") -->
+<!-- TODO before deploy: replace "Rolling out soon" with the locked effective date (e.g. "Rolling out June 1") -->
+<div class="lock-banner" id="lockBanner" data-skin="announcement" style="background:#E8F5EC; border-bottom-color:var(--success); color:#2E5C28;">
+  ✓ <b>Scenario A locked.</b> Flat $19 base for Lead In Training · raises at every lead rung · Hall of Fame restructured as an award. <b>Rolling out soon.</b>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     MARKET INDICATOR — Standard tier file (Houston + San Antonio).
+     Every position base runs $1/hr below the premium markets to reflect
+     local cost-of-labor differences. Bonus structure + benefits identical.
+     For premium markets, see mover-pay-announcement-premium.html
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="branch-bar">
+  <div class="branch-bar-inner">
+    <span class="label">📍 Showing pay for:</span>
+    <span class="market-list" id="marketList">Houston · San Antonio</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     STICKY NAV
+     ═══════════════════════════════════════════════════════════════════ -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand">Einstein<span>.</span> Mover Pay</div>
+    <div class="nav-links">
+      <a href="#changes" data-skin="announcement">What's Changing</a>
+      <a href="#ladder">Pay Ladder</a>
+      <a href="#bonus">Performance Bonus</a>
+      <a href="#milestones">Milestones</a>
+      <a href="#benefits">Benefits</a>
+      <a href="#calc">Pay Calculator</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       HERO
+       ═════════════════════════════════════════════════════════════════ -->
+  <section class="hero" id="top">
+    <span class="hero-eyebrow" data-skin="announcement">Mover Pay Update · May 2026</span>
+    <h1 data-skin="announcement">Your pay just got a raise — and a clearer path forward.</h1>
+    <h1 data-mode-onboarding-only style="display:none">Your Mover Pay, Explained.</h1>
+    <p class="lede" data-skin="announcement">
+      Higher base pay at every rung — Lead In Training all the way to Lead General. A simpler entry-level offer. Bigger bonus ceilings at the early lead rungs.
+    </p>
+    <p class="lede" data-mode-onboarding-only style="display:none">
+      Welcome. This is how mover pay works at Einstein — base pay, the performance bonus, how you move up the ladder, and every benefit that comes with the job. Run your numbers in the calculator. Your branch manager can fill in anything that's specific to you.
+    </p>
+    <div class="hero-cta-row">
+      <a href="#changes" class="btn btn-primary" data-skin="announcement">Show me what changed →</a>
+      <a href="#calc" class="btn btn-ghost">Crunch my numbers</a>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       1 · WHAT'S CHANGING AT A GLANCE
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="changes" data-skin="announcement">
+    <h2>What's changing at a glance</h2>
+    <p class="sub">Four updates. Full numbers, nothing buried.</p>
+    <div class="change-grid">
+
+      <div class="change-card">
+        <span class="tag">Renamed + simplified</span>
+        <h4>Co-Pilot is now "Lead In Training"</h4>
+        <p>Same role, clearer name. The job is — and always was — a stepping stone to Lead. We're naming it what it actually is. Pay also gets simpler: <b>flat <span id="card1BodyBase">$19</span>/hr, no performance bonus</b>. The floor is the floor.</p>
+        <table class="raise-table">
+          <tr>
+            <td class="pos">Title</td>
+            <td class="was">Co-Pilot</td>
+            <td class="now up">Lead In Training</td>
+          </tr>
+          <tr>
+            <td class="pos">Structure</td>
+            <td class="was"><span id="card1WasBase">$17</span> + $1.50 bonus</td>
+            <td class="now up">Flat <span id="card1NowBase">$19</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="change-card">
+        <span class="tag">Higher base</span>
+        <h4>Base pay up at every rung</h4>
+        <p>Every position on the ladder moves up. Lead In Training gets +$2.00. Every Lead position gets at least +$1.50. Lead General gets the biggest base bump at +$2.50.</p>
+        <table class="raise-table">
+          <thead>
+            <tr><th>Position</th><th>Was</th><th>Now</th></tr>
+          </thead>
+          <tbody id="baseRaiseBody"><!-- branch-aware, rendered by JS --></tbody>
+        </table>
+      </div>
+
+      <div class="change-card">
+        <span class="tag">Bigger bonus ceiling</span>
+        <h4>Performance bonus — bigger ceilings at the early lead rungs</h4>
+        <p>Max performance bonus moved up at Jr., Regular, and Sr. Lead. Master Lead and Lead General came down slightly — but those rungs got the bigger base bumps, so total opportunity is still up everywhere.</p>
+        <table class="raise-table">
+          <thead>
+            <tr><th>Position</th><th>Was</th><th>Now</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="pos">Lead In Training</td><td class="was">$1.50</td><td class="now down">removed</td></tr>
+            <tr><td class="pos">Jr. Lead</td><td class="was">$1.75</td><td class="now up">$2.00</td></tr>
+            <tr><td class="pos">Regular Lead</td><td class="was">$2.00</td><td class="now up">$2.25</td></tr>
+            <tr><td class="pos">Sr. Lead</td><td class="was">$2.25</td><td class="now up">$2.50</td></tr>
+            <tr><td class="pos">Master Lead</td><td class="was">$3.00</td><td class="now down">$2.75</td></tr>
+            <tr><td class="pos">Lead General</td><td class="was">$3.75</td><td class="now down">$3.00</td></tr>
+          </tbody>
+        </table>
+        <p class="raise-table footnote" style="margin:8px 0 0; font-size:11.5px;">LIT's performance bonus was rolled into the higher flat base. Master Lead and Lead General have slightly lower bonus maxes, offset by bigger base bumps — total max-comp opportunity is still up at every rung.</p>
+      </div>
+
+      <div class="change-card">
+        <span class="tag">Restructured</span>
+        <h4>Hall of Fame is now an award</h4>
+        <p>HoF used to be a separate pay band above Lead General. That's been retired. Every current Hall of Famer is now on the Lead General pay path.</p>
+        <p>The HoF designation stays as an honor — swag, selectable PTO days, plaques, truck naming, possible one-time bonuses — earned by Lead Generals. The plaque doesn't go anywhere; the pay band underneath it gets folded into Lead General.</p>
+        <table class="raise-table">
+          <tr>
+            <td class="pos">HoF as</td>
+            <td class="was">Pay position</td>
+            <td class="now up">Award</td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       2 · THE PAY LADDER
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="ladder">
+    <h2>The pay ladder</h2>
+    <p class="sub">Six rungs. Same direction: up.</p>
+    <div class="ladder" id="ladderGrid"><!-- rendered via JS --></div>
+
+    <div class="pt-callout">
+      <h4>Working as a Part-Time Lead?</h4>
+      <p>
+        Part-Time Lead isn't a separate rung on the ladder — it's a pay arrangement for movers who lead some shifts but
+        not all. Your pay flips between two rates depending on what you're doing that day:
+      </p>
+      <div class="pt-grid">
+        <div class="pt-card">
+          <div class="lbl">Shifts where you're leading</div>
+          <div class="val"><span id="ptLeadingBase">$20.00</span>/hr base + up to $2.00/hr bonus</div>
+          <p class="sub">You earn Jr. Lead pay — base + full performance bonus eligibility — for every hour you're leading the truck.</p>
+        </div>
+        <div class="pt-card">
+          <div class="lbl">Shifts where you're not leading</div>
+          <div class="val"><span id="ptNonLeadingBase">$19.00</span>/hr flat</div>
+          <p class="sub">You earn Lead In Training pay — flat hourly, no performance bonus — for hours you're not in the lead seat.</p>
+        </div>
+      </div>
+      <p>
+        So your weekly take-home depends on how much of your time is spent leading. Your branch manager tracks this and
+        you can ask any time what your shift breakdown looks like.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       3 · HOW THE PERFORMANCE BONUS WORKS
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="bonus">
+    <h2>How the performance bonus works</h2>
+    <p class="sub">Three metrics today. One pending. Quarterly. Paid one month after quarter close.</p>
+    <div class="bonus-shell">
+
+      <div class="applies-to">
+        <b>Who this applies to:</b> Leads — Jr. Lead through Lead General. Part-Time Leads earn the bonus on shifts where they're leading. Lead In Training is flat $19/hr with no performance bonus, so the matrix doesn't apply at entry level (yet).
+      </div>
+
+      <h3 style="font-size:15px; text-transform:uppercase; letter-spacing:0.06em; color:var(--gray-dim); margin-bottom:10px;">The Lead performance matrix</h3>
+
+      <div class="matrix-wrap">
+        <table class="perf-matrix">
+          <thead>
+            <tr>
+              <th rowspan="2" style="background:white; border-bottom:1px solid var(--gray-line);"></th>
+              <th colspan="3" class="band-low">Low Performance</th>
+              <th colspan="3" class="band-med">Medium Performance</th>
+              <th colspan="2" class="band-high">High Performance</th>
+              <th rowspan="2" class="col-weight" style="font-size:11.5px; text-transform:uppercase;">Weight</th>
+            </tr>
+            <tr class="pts-row">
+              <th class="pts-low">0</th><th class="pts-low">4</th><th class="pts-low">5</th>
+              <th class="pts-med">6</th><th class="pts-med">7</th><th class="pts-med">8</th>
+              <th class="pts-high">9</th><th class="pts-high">10</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="pending">
+              <td class="m-name">Customer Satisfaction Score <small>NPS / reviews — measurement TBD</small></td>
+              <td>82 or below</td><td>&gt;82</td><td>&gt;84</td>
+              <td>&gt;86</td><td>&gt;88</td><td>&gt;90</td>
+              <td>&gt;92</td><td>&gt;94</td>
+              <td class="col-weight">0</td>
+            </tr>
+            <tr>
+              <td class="m-name">Damages per Move Hour <small>Team metric · Team on the Move (your truck/crew), not branch-level. $ damages ÷ move hours.</small></td>
+              <td>≥$3.29</td><td>&lt;$3.29</td><td>&lt;$2.88</td>
+              <td>&lt;$2.47</td><td>&lt;$2.05</td><td>&lt;$1.64</td>
+              <td>&lt;$1.23</td><td>&lt;$0.83</td>
+              <td class="col-weight">34</td>
+            </tr>
+            <tr>
+              <td class="m-name">Driver Score <small>Individual · Samsara score. See void clauses below.</small></td>
+              <td>70 or below</td><td>&gt;70</td><td>&gt;75</td>
+              <td>&gt;80</td><td>&gt;85</td><td>&gt;90</td>
+              <td>&gt;92</td><td>&gt;95</td>
+              <td class="col-weight">33</td>
+            </tr>
+            <tr>
+              <td class="m-name">Attendance <small>Individual · Total Lates + Callouts in the quarter</small></td>
+              <td>more than 3</td><td>3</td><td>—</td>
+              <td>2.5</td><td>2</td><td>1.5</td>
+              <td>—</td><td>1 or fewer</td>
+              <td class="col-weight">33</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Mobile-only stack: same data, restructured for phone readability -->
+      <div class="matrix-mobile">
+
+        <div class="metric-mobile pending">
+          <div class="mm-head">
+            <h4>Customer Satisfaction Score</h4>
+            <span class="weight-pill">Wt 0 · pending</span>
+          </div>
+          <p class="desc">NPS / reviews — measurement TBD</p>
+          <div class="band-block">
+            <span class="band-label low">Low</span>
+            <div class="pp-list">
+              <span class="pts">0 pt</span><span class="thr">82 or below</span>
+              <span class="pts">4 pt</span><span class="thr">&gt;82</span>
+              <span class="pts">5 pt</span><span class="thr">&gt;84</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label med">Medium</span>
+            <div class="pp-list">
+              <span class="pts">6 pt</span><span class="thr">&gt;86</span>
+              <span class="pts">7 pt</span><span class="thr">&gt;88</span>
+              <span class="pts">8 pt</span><span class="thr">&gt;90</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label high">High</span>
+            <div class="pp-list">
+              <span class="pts">9 pt</span><span class="thr">&gt;92</span>
+              <span class="pts">10 pt</span><span class="thr">&gt;94</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-mobile">
+          <div class="mm-head">
+            <h4>Damages per Move Hour</h4>
+            <span class="weight-pill">Weight 34</span>
+          </div>
+          <p class="desc">Team metric · Team on the Move (your truck/crew), not branch-level. $ damages ÷ move hours.</p>
+          <div class="band-block">
+            <span class="band-label low">Low</span>
+            <div class="pp-list">
+              <span class="pts">0 pt</span><span class="thr">≥$3.29</span>
+              <span class="pts">4 pt</span><span class="thr">&lt;$3.29</span>
+              <span class="pts">5 pt</span><span class="thr">&lt;$2.88</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label med">Medium</span>
+            <div class="pp-list">
+              <span class="pts">6 pt</span><span class="thr">&lt;$2.47</span>
+              <span class="pts">7 pt</span><span class="thr">&lt;$2.05</span>
+              <span class="pts">8 pt</span><span class="thr">&lt;$1.64</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label high">High</span>
+            <div class="pp-list">
+              <span class="pts">9 pt</span><span class="thr">&lt;$1.23</span>
+              <span class="pts">10 pt</span><span class="thr">&lt;$0.83</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-mobile">
+          <div class="mm-head">
+            <h4>Driver Score</h4>
+            <span class="weight-pill">Weight 33</span>
+          </div>
+          <p class="desc">Individual · Samsara score. See void clauses below.</p>
+          <div class="band-block">
+            <span class="band-label low">Low</span>
+            <div class="pp-list">
+              <span class="pts">0 pt</span><span class="thr">70 or below</span>
+              <span class="pts">4 pt</span><span class="thr">&gt;70</span>
+              <span class="pts">5 pt</span><span class="thr">&gt;75</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label med">Medium</span>
+            <div class="pp-list">
+              <span class="pts">6 pt</span><span class="thr">&gt;80</span>
+              <span class="pts">7 pt</span><span class="thr">&gt;85</span>
+              <span class="pts">8 pt</span><span class="thr">&gt;90</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label high">High</span>
+            <div class="pp-list">
+              <span class="pts">9 pt</span><span class="thr">&gt;92</span>
+              <span class="pts">10 pt</span><span class="thr">&gt;95</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="metric-mobile">
+          <div class="mm-head">
+            <h4>Attendance</h4>
+            <span class="weight-pill">Weight 33</span>
+          </div>
+          <p class="desc">Individual · Total Lates + Callouts in the quarter</p>
+          <div class="band-block">
+            <span class="band-label low">Low</span>
+            <div class="pp-list">
+              <span class="pts">0 pt</span><span class="thr">more than 3</span>
+              <span class="pts">4 pt</span><span class="thr">3</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label med">Medium</span>
+            <div class="pp-list">
+              <span class="pts">6 pt</span><span class="thr">2.5</span>
+              <span class="pts">7 pt</span><span class="thr">2</span>
+              <span class="pts">8 pt</span><span class="thr">1.5</span>
+            </div>
+          </div>
+          <div class="band-block">
+            <span class="band-label high">High</span>
+            <div class="pp-list">
+              <span class="pts">10 pt</span><span class="thr">1 or fewer</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <p style="font-size:13px; color:var(--gray-dim); margin:8px 0 22px;">
+        <b>How to read it:</b> Each quarter you earn 0–10 pinpoints per metric. Multiply your pinpoints by the metric's weight (treated as a decimal: 34 = .34) to get points. Sum across all metrics = your <b>Quarterly Score</b>, on a 0–10 scale. A Quarterly Score of 8/10 means you earn 80% of your position's max bonus for the quarter. Same matrix at every Lead rung — Jr. Lead through Lead General.
+      </p>
+
+      <div class="void-callout">
+        <h4>⚠ Driver Score void clauses</h4>
+        <ul>
+          <li><b>At-fault accident over $500</b> in the quarter → your driver score bonus is void.</li>
+          <li><b>Traffic violation</b> in the quarter → your driver score bonus is void.</li>
+          <li><b>1st curb-check damage is excused</b> — assuming you weren't driving recklessly (e.g., hitting the curb going &gt;10 mph). This won't immediately pull your bonus.</li>
+          <li><b>2nd curb-check damage if &gt;$500</b> → loss of bonus.</li>
+        </ul>
+      </div>
+
+      <div class="worked-example">
+        <h4>Worked example</h4>
+        <p>
+          You're a <b>Regular Lead</b> with a max bonus of <b>$2.25/hr</b>. This quarter:
+        </p>
+        <ul style="margin:8px 0 10px 0; padding-left:20px; font-size:14px;">
+          <li>Your team's <b>damages per move hour</b> averaged $1.50 → that's <b>8 pinpoints</b> × .34 = <b>2.72 pts</b></li>
+          <li>Your <b>driver score</b> averaged 93 → <b>9 pinpoints</b> × .33 = <b>2.97 pts</b></li>
+          <li>You had <b>1 callout</b> in the quarter → <b>10 pinpoints</b> × .33 = <b>3.30 pts</b></li>
+        </ul>
+        <p style="margin:0;">
+          Quarterly Score = <b>8.99/10</b> → you earn <b>89.9%</b> of your <b>$2.25/hr</b> max → <b>$2.02/hr</b> in performance bonus. On a 480-hour quarter, that's about <b>$971</b> — paid one month after quarter close. On top of your <b><span id="weRegBase">$20.50</span>/hr base</b>. Plus tips.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       4 · PROMOTION MILESTONES
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="milestones">
+    <h2>How you move up</h2>
+    <p class="sub">Hours + performance. No mystery.</p>
+    <div class="stair">
+
+      <div class="stair-step">
+        <div class="stair-num">0<small>hrs</small></div>
+        <div class="stair-body">
+          <strong>Start here as Lead in Training</strong>
+          <small>You're on the truck learning. Base pay starts day one.</small>
+        </div>
+        <div class="stair-pos">LIT</div>
+      </div>
+
+      <div class="stair-step">
+        <div class="stair-num">~480<small>hrs</small></div>
+        <div class="stair-body">
+          <strong>Earn your star · Promoted to Jr. Lead</strong>
+          <small>~3 months full-time equivalent. Complete the handbook + show you can lead a truck. Base bumps from <span id="stairLitBase">$19</span> to <span id="stairJrBase">$20</span> and bonus opens up.</small>
+        </div>
+        <div class="stair-pos">Jr. Lead</div>
+      </div>
+
+      <div class="stair-step">
+        <div class="stair-num">962<small>hrs</small></div>
+        <div class="stair-body">
+          <strong>Regular Lead</strong>
+          <small>About 6 months full-time equivalent. Sustained medium-to-high individual performance.</small>
+        </div>
+        <div class="stair-pos">Reg. Lead</div>
+      </div>
+
+      <div class="stair-step">
+        <div class="stair-num">962<small>+hrs</small></div>
+        <div class="stair-body">
+          <strong>Senior Lead</strong>
+          <small>Another 6 months FTE in role with sustained medium-to-high performance.</small>
+        </div>
+        <div class="stair-pos">Sr. Lead</div>
+      </div>
+
+      <div class="stair-step">
+        <div class="stair-num">962<small>+hrs</small></div>
+        <div class="stair-body">
+          <strong>Master Lead</strong>
+          <small>Sustained <b>high</b> individual performance. 5 days vacation unlocks here.</small>
+        </div>
+        <div class="stair-pos">Master</div>
+      </div>
+
+      <div class="stair-step">
+        <div class="stair-num">1,924<small>hrs</small></div>
+        <div class="stair-body">
+          <strong>Lead General</strong>
+          <small>About 12 months FTE. Sustained high individual performance. 10 days vacation.</small>
+        </div>
+        <div class="stair-pos">Lead Gen</div>
+      </div>
+
+    </div>
+    <p class="sub" style="margin-top:18px; max-width:720px;">
+      Part-time hours still count. The clock isn't calendar time — it's hours worked. Talk to your branch
+      manager about where you are on the ladder.
+    </p>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       5 · BENEFITS
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="benefits">
+    <h2>The benefits stack</h2>
+    <p class="sub">The stuff that comes with the job — not just the hourly.</p>
+    <div class="benefits">
+
+      <div class="benefit"><div class="b-icon">W2</div><h4>W2 employee</h4><p>Not a contractor. Worker's Comp protects you if you get hurt on the job. We handle a portion of your taxes. Overtime pay (time-and-a-half) over 40 hours.</p></div>
+
+      <div class="benefit"><div class="b-icon">$5</div><h4>On-call bonus</h4><p>Extra $5/hr any time we call you in last-minute.</p></div>
+
+      <div class="benefit"><div class="b-icon">👶</div><h4>Paternity leave</h4><p>1 week paid. Bumps to 2 weeks after a year (full-time equivalent hours).</p></div>
+
+      <div class="benefit"><div class="b-icon">🕊</div><h4>Bereavement</h4><p>2 days paid. As much unpaid time as you need.</p></div>
+
+      <div class="benefit"><div class="b-icon">401K</div><h4>401(k) with 4% match</h4><p>We match up to 4%. Free money — take it.</p></div>
+
+      <div class="benefit"><div class="b-icon">+</div><h4>Health, dental, vision</h4><p>Affordable plans. Zero-deductible option available to full-time employees.</p></div>
+
+      <div class="benefit"><div class="b-icon">🗓</div><h4>Unlimited unpaid time off</h4><p>Take what you need with manager approval. Flexible scheduling baked in.</p></div>
+
+      <div class="benefit"><div class="b-icon">$1K</div><h4>$1,000 referral bonus</h4><p>$500 at 90 days, $500 at 6 months. Paid to you, not the new hire.</p></div>
+
+      <div class="benefit"><div class="b-icon">🎉</div><h4>Quarterly parties + events</h4><p>Team building, recognition, the occasional excellent excuse to dress up.</p></div>
+
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       6 · RUNG CALCULATOR
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="calc">
+    <h2>Run your numbers</h2>
+    <p class="sub">Pick where you are. See what a week and a quarter look like. <a href="#ladder" style="color:var(--blue);">Part-Time Lead? See the callout in the ladder section</a> — your pay flips between two rates depending on the shift.</p>
+    <div class="calc">
+
+      <div class="calc-controls">
+        <h3>Inputs</h3>
+
+        <div class="field">
+          <label for="calcRung">Your position</label>
+          <select id="calcRung"></select>
+        </div>
+
+        <div class="field">
+          <label>Hours per week</label>
+          <div class="pill-group" id="calcHours">
+            <div class="pill" data-hrs="20">20 hrs</div>
+            <div class="pill" data-hrs="30">30 hrs</div>
+            <div class="pill active" data-hrs="40">40 hrs</div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="calcScore">
+            Your Quarterly Score
+            <span style="float:right; color:var(--orange); font-weight:700; font-size:13px;" id="scoreLabel">8.5 <span style="color:var(--gray-dim); font-weight:500;">/ 10</span></span>
+          </label>
+          <input type="range" id="calcScore" min="0" max="10" step="0.1" value="8.5" style="width:100%; accent-color:var(--orange);">
+          <div style="display:flex; justify-content:space-between; font-size:11px; color:var(--gray-dim); margin-top:4px; text-transform:uppercase; letter-spacing:0.04em;">
+            <span>0</span><span>5</span><span>10</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="calcTips">Assumed tips ($/hr)</label>
+          <input type="number" id="calcTips" min="0" max="20" step="0.5" value="7">
+        </div>
+
+      </div>
+
+      <div class="calc-output">
+        <div class="rung-stat-label">Your blended hourly</div>
+        <div class="calc-headline" id="outBlended">$??.??/hr</div>
+        <div class="calc-sub" id="outBreakdown">Base + bonus + tips</div>
+
+        <div class="calc-grid">
+          <div class="calc-tile"><div class="lbl">Base pay</div><div class="val" id="outBase">$??.??</div></div>
+          <div class="calc-tile"><div class="lbl">Performance bonus</div><div class="val" id="outBonus">$??.??</div></div>
+          <div class="calc-tile"><div class="lbl">Tips (estimated)</div><div class="val" id="outTips">$??.??</div></div>
+          <div class="calc-tile"><div class="lbl">Weekly take-home (est.)</div><div class="val" id="outWeekly">$???</div></div>
+          <div class="calc-tile"><div class="lbl">Quarterly bonus payout</div><div class="val" id="outQuarterly">$???</div></div>
+          <div class="calc-tile"><div class="lbl">Promotion gate</div><div class="val" id="outGate" style="font-size:13px; line-height:1.3;">—</div></div>
+        </div>
+
+        <div class="calc-note">
+          Estimates only. Bonus payouts are calculated and paid one month after quarter-end. Overtime, on-call,
+          and other premiums not included. Tips are an example assumption — they vary by week, crew, and customer.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       7 · WHAT CHANGED & WHY
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="why" data-skin="announcement">
+    <h2>What changed & why</h2>
+    <p class="sub">The policy details behind the headline.</p>
+    <div class="policy-list">
+
+      <details open>
+        <summary>Lead In Training is now a flat $19 — no performance bonus</summary>
+        <div class="body">
+          <p>We dropped the $1.50 performance bonus on the entry-level role and rolled it into a flat $19/hr base. Two reasons. First — your floor is your floor. No chasing a performance bonus while you're still learning. Second — we recruit Lead-quality candidates into this seat, and they deserve a pay offer that's clear from day one. LIT is explicitly a transitional role; the target is 3–6 months in seat before you're promoted.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Hall of Fame: from pay band to award</summary>
+        <div class="body">
+          <p>HoF used to be a separate paid position above Lead General. That's been retired. Every current HoF mover is now on the Lead General pay path — same base, same bonus structure. HoF itself becomes an honor — swag, selectable PTO days, plaques, truck naming, and possible one-time bonuses. The recognition stays. The pay band gets folded in. Cleaner ladder, same destination.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Higher base AND higher bonus ceilings at the leads</summary>
+        <div class="body">
+          <p>Every Lead position — Jr., Regular, Senior, Master, and General — got a base raise of $1.50 to $2.50/hr. On top of that, max performance bonuses went up for Jr., Regular, Sr., and Master Lead. Lead General's bonus max trimmed slightly because the base bump there is bigger ($19.50 → $22.00). When you stack it all up, the top of the ladder went up more than the middle, but the middle didn't get left behind.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Why these three things together?</summary>
+        <div class="body">
+          <p>Three connected ideas: <b>(1)</b> a stronger floor at entry so we can attract better candidates, <b>(2)</b> a cleaner ladder by collapsing HoF into Lead General, and <b>(3)</b> meaningful raises at every rung so movement up the ladder is the engine of pay growth. The Mover Comp Philosophy doc lays out the underlying principles — comp grows with mastery, the company shares wins with movers, and the structure has to be honest and durable.</p>
+        </div>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       8 · FAQ
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="faq">
+    <h2>FAQ</h2>
+    <p class="sub">Answers to the questions we get most.</p>
+    <div class="policy-list">
+
+      <details>
+        <summary>When does the quarterly bonus get paid out?</summary>
+        <div class="body"><p>One month after the quarter ends. We need that month to finalize damage numbers and (eventually) customer satisfaction data.</p></div>
+      </details>
+
+      <details>
+        <summary>What if I leave the company after the quarter ends but before the payout date?</summary>
+        <div class="body"><p>You still get paid. The bonus goes out via direct deposit on the normal payout date.</p></div>
+      </details>
+
+      <details>
+        <summary>How does the bonus work if I'm part-time?</summary>
+        <div class="body"><p>Same percentages, prorated by hours worked. The pay calculator above will show you exactly what a 20- or 30-hour week looks like at your rung.</p></div>
+      </details>
+
+      <details>
+        <summary>What if I'm in training but my star isn't earned yet?</summary>
+        <div class="body"><p>You earn the Lead In Training base — flat $19/hr, no performance bonus. Once you earn your star and step into the Jr. Lead role, you move to the Jr. Lead pay band — $20 base + up to $2/hr performance bonus.</p></div>
+      </details>
+
+      <details>
+        <summary>I'm currently in the Hall of Fame. What happens to my pay?</summary>
+        <div class="body"><p>You move to the Lead General pay path. The HoF designation stays as an award — swag, selectable PTO days, plaques, truck naming, possible one-time bonuses. The plaque on the wall doesn't go anywhere; the pay band underneath it just gets folded into Lead General so the ladder has a single clean top rung. Your branch manager will walk you through exactly what your new pay looks like.</p></div>
+      </details>
+
+      <details>
+        <summary>How do I know what tier (Low / Medium / High) I'm at?</summary>
+        <div class="body"><p>Your branch manager has the tier breakdowns. You can ask any time — we'd rather you know.</p></div>
+      </details>
+
+      <details>
+        <summary>What exceptions are made for call-outs or late arrivals?</summary>
+        <div class="body">
+          <p>For <b>call-outs</b>, only two reasons keep one from being logged against your performance bonus: bereavement, or workers' comp following an on-site injury. Everything else counts.</p>
+          <p>For <b>late arrivals</b>, there are no exceptions — but a 7-minute buffer is already built in before a late point is recorded.</p>
+          <p>Any exception outside those rules has to be approved by a regional manager. And if your attendance is approaching termination levels, exceptions may be granted on the <em>termination</em> side (like requiring a doctor's note to avoid losing your job) — but that call-out or late still affects your performance bonus for the quarter.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Are my driver score and attendance points tied to a specific quarter?</summary>
+        <div class="body">
+          <p>Yes. Your driver score for the quarter is based on your Samsara score during that quarter's date range. Same with call-out and late-arrival points — only what happened in that quarter counts toward that quarter's bonus. New quarter, fresh start.</p>
+        </div>
+      </details>
+
+      <details>
+        <summary>Since this is a bonus, will I pay more in taxes on it?</summary>
+        <div class="body">
+          <p><b>Short answer: no.</b> Your total taxes at the end of the year are the same whether your pay came as regular wages or as a bonus.</p>
+          <p><b>Long answer:</b> Bonuses are typically withheld at <b>22%</b> on the individual paycheck — that's an IRS estimate, not your actual tax rate. At year-end, your real federal tax bracket is determined by your total income (wages + bonuses combined) and your filing status (single, married filing jointly, etc.).</p>
+          <p>If your actual bracket is <b>higher than 22%</b>, not enough was withheld during the year and you could owe more on your tax return. If your bracket is <b>lower than 22%</b>, more was withheld than you owe, and you'll get that difference back as a refund. Either way, the right amount of tax gets paid — bonuses don't cost you more overall.</p>
+        </div>
+      </details>
+
+
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════════════════════════════
+       9 · CONTACT
+       ═════════════════════════════════════════════════════════════════ -->
+  <section id="contact">
+    <h2>Questions?</h2>
+    <p class="sub">Talk to your branch manager. They have the same info you do — plus your numbers.</p>
+  </section>
+
+  <footer>
+    <p style="font-size:14px; color:var(--gray); margin:0 0 14px; max-width:560px; margin-left:auto; margin-right:auto;">
+      That's the whole picture. Questions, edge cases, or "wait, what about my situation?" — your branch manager has answers. We'll keep this page current as things shift.
+    </p>
+    <div style="font-size:11.5px; color:var(--gray-dim); line-height:1.6;">
+      Einstein Moving Company · Internal mover comp reference · Updated 5/15/2026<br>
+      Numbers sourced from the <a href="https://einsteinadmin.github.io/einstein-mover-comp-c102a0579a4b/" style="color:var(--blue);">Mover Comp Scenario Modeler v4.5</a>
+    </div>
+  </footer>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     SCRIPT — data, ladder render, calculator
+     ═══════════════════════════════════════════════════════════════════ -->
+<script>
+  /* ─────────────────────────────────────────────────────────────────
+   * SOURCE OF TRUTH — Pay structure.
+   * Numbers shown as null = placeholder (renders as $??.??).
+   * On 5/17, populate `base` and `varMax` with locked scenario numbers.
+   * Promotion gates pulled from Working Draft sheet "Simple Pay Breakout".
+   * Position naming + grouping mirrors mover-comp-scenario-modeler.html.
+   * ───────────────────────────────────────────────────────────────── */
+  /* SCENARIO A — LOCKED 5/15/2026. Numbers pulled from
+   * mover-comp-scenario-modeler.html v4.5 (the canonical tool).
+   * If anything shifts before rollout, edit this object only — every
+   * section, calculator, and worked-example reads from here.
+   */
+  const POSITIONS = [
+    { id: 'lit',      name: 'Lead In Training', short: 'LIT',       group: 'entry',  rung: 1, kind: 'rung',
+      base: 19.00, varMax: 0.00, pto: 0,
+      gate: 'Entry-level position while completing handbook + training. Designed as a transitional role — target time 3–6 months before promotion.' },
+    { id: 'jr',       name: 'Jr. Lead',         short: 'Jr. Lead',  group: 'lead',   rung: 2, kind: 'rung',
+      base: 20.00, varMax: 2.00, pto: 0,
+      gate: 'Earned your star. Complete handbook + show you can lead a truck.' },
+    { id: 'reg',      name: 'Regular Lead',     short: 'Reg. Lead', group: 'lead',   rung: 3, kind: 'rung',
+      base: 20.50, varMax: 2.25, pto: 0,
+      gate: 'About 962 hrs FTE (~6 mo). Sustained medium-to-high individual performance.' },
+    { id: 'sr',       name: 'Sr. Lead',         short: 'Sr. Lead',  group: 'lead',   rung: 4, kind: 'rung',
+      base: 21.00, varMax: 2.50, pto: 0,
+      gate: 'Another ~962 hrs FTE in role. Sustained medium-to-high individual performance.' },
+    { id: 'master',   name: 'Master Lead',      short: 'Master',    group: 'master', rung: 5, kind: 'rung',
+      base: 21.50, varMax: 2.75, pto: 5,
+      gate: 'Sustained HIGH individual performance in Sr. Lead role. 5 days vacation unlocks here.' },
+    { id: 'general',  name: 'Lead General',     short: 'Lead Gen',  group: 'master', rung: 6, kind: 'rung',
+      base: 22.00, varMax: 3.00, pto: 10,
+      gate: 'About 1,924 hrs FTE (~12 mo). Sustained HIGH individual performance. 10 days vacation. Hall of Fame award lives here.' },
+
+    /* Part-Time Lead is a pay arrangement, not a destination rung.
+     * Modeler tracks it as a blended rate ($20.50/$0.75) for affordability math,
+     * but real-world pay is two-buckets: LIT rate on non-lead shifts,
+     * Jr. Lead rate (+bonus) on lead shifts. Excluded from ladder render
+     * and explained in a dedicated callout. Calculator excludes it too —
+     * a PT Lead picks LIT or Jr. Lead depending on the shift type.
+     */
+  ];
+
+  /* Bonus mechanic: Quarterly Score (0–10) is your direct earned % of max bonus.
+   * 8.5/10 = 85% of position's max bonus. No banding — linear. */
+  const fmt = (n) => (n == null || isNaN(n)) ? '$??.??' : ('$' + Number(n).toFixed(2));
+  const fmtRound = (n) => (n == null || isNaN(n)) ? '$??' : ('$' + Math.round(n));
+  const fmt0 = (n) => (n == null || isNaN(n)) ? '$???' : ('$' + Math.round(n).toLocaleString());
+  const phSpan = '<span class="ph">$??.??</span>';
+
+  /* ─────────────────────────────────────────────────────────────────
+   * TIER — this file is the STANDARD tier (Houston + San Antonio).
+   * Every position base runs $1/hr below the premium markets.
+   * For premium markets, see mover-pay-announcement-premium.html
+   * ───────────────────────────────────────────────────────────────── */
+  const baseFor = (positionId) => {
+    const p = POSITIONS.find(x => x.id === positionId);
+    return p ? p.base : null;
+  };
+  const wasBaseFor = (positionId) => {
+    // "Was" base values pre-Scenario A. Standard tier (−$1 vs premium).
+    const wasMap = { lit: 17.00, jr: 18.50, reg: 19.00, sr: 19.50, master: 19.50, general: 19.50 };
+    return wasMap[positionId];
+  };
+
+  /* ─────────────────────────────────────────────────────────────────
+   * Render: Pay Ladder
+   * ───────────────────────────────────────────────────────────────── */
+  const TIP_ASSUMPTION = 7;  // Typical $5–8/hr — using 7 as the mid-point for ladder display
+
+  function renderLadder() {
+    const host = document.getElementById('ladderGrid');
+    const TOTAL_RUNGS = 6;
+    host.innerHTML = POSITIONS.map(p => {
+      const base = p.base;
+      const high = base + p.varMax;
+      const allIn = high + TIP_ASSUMPTION;
+      const hasBonus = p.varMax > 0;
+      const dots = Array.from({length: TOTAL_RUNGS}, (_, i) =>
+        `<span class="dot${i < p.rung ? ' active' : ''}"></span>`
+      ).join('');
+      return `
+        <div class="rung">
+          <div class="rung-meta">
+            <span class="rung-dots">${dots}</span>
+            <span class="rung-label">Rung ${p.rung}</span>
+          </div>
+          <h3>${p.name}</h3>
+          <div class="rung-stats">
+            <div>
+              <div class="rung-stat-label">Base</div>
+              <div class="rung-stat-val">${fmt(base)}/hr</div>
+            </div>
+            <div>
+              <div class="rung-stat-label">Max bonus</div>
+              <div class="rung-stat-val">${hasBonus ? fmt(p.varMax) + '/hr' : '—'}</div>
+            </div>
+          </div>
+          <div class="rung-high-label">${hasBonus ? 'At High performance + $' + TIP_ASSUMPTION + '/hr tips' : 'Base + $' + TIP_ASSUMPTION + '/hr tips'}</div>
+          <div class="rung-high">${fmt(allIn)}/hr</div>
+          <div class="rung-gate"><b>How you get here:</b> ${p.gate}</div>
+          ${p.pto > 0 ? `<span class="rung-pto">+ ${p.pto} vacation days</span>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  /* Render the Section 1 "Base pay up at every rung" tbody */
+  function renderBaseRaiseTable() {
+    const host = document.getElementById('baseRaiseBody');
+    if (!host) return;
+    host.innerHTML = POSITIONS.map(p => `<tr>
+        <td class="pos">${p.name}</td>
+        <td class="was">${fmt(wasBaseFor(p.id))}</td>
+        <td class="now up">${fmt(baseFor(p.id))}</td>
+      </tr>`).join('');
+  }
+
+  /* Inline-span hydration (Card 1, PT callout, staircase, worked example) */
+  function renderInlineNumbers() {
+    const lit = baseFor('lit');
+    const jr  = baseFor('jr');
+    const reg = baseFor('reg');
+    const litWas = wasBaseFor('lit');
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    set('card1WasBase',  fmtRound(litWas));
+    set('card1NowBase',  fmtRound(lit));
+    set('card1BodyBase', fmtRound(lit));
+    set('ptLeadingBase',    fmt(jr));
+    set('ptNonLeadingBase', fmt(lit));
+    set('stairLitBase', fmtRound(lit));
+    set('stairJrBase',  fmtRound(jr));
+    set('weRegBase', fmt(reg));
+  }
+
+  /* ─────────────────────────────────────────────────────────────────
+   * Calculator
+   * ───────────────────────────────────────────────────────────────── */
+  const state = { rung: 'reg', hrs: 40, score: 8.5, tips: 7 };
+
+  function populateCalcRungs() {
+    const sel = document.getElementById('calcRung');
+    sel.innerHTML = POSITIONS.map(p =>
+      `<option value="${p.id}"${p.id === state.rung ? ' selected' : ''}>${p.name}</option>`
+    ).join('');
+  }
+
+  function recalc() {
+    const p = POSITIONS.find(x => x.id === state.rung);
+    const base = baseFor(state.rung);
+    const bonusMax = p.varMax;
+    const scorePct = state.score / 10;                  // 0–1 linear
+    const bonus = bonusMax * scorePct;
+    const tips = state.tips;
+    const blended = base + bonus + tips;
+    const weekly = blended * state.hrs;
+    const quarterly = bonus * state.hrs * 12;          // 12 wks/qtr
+
+    document.getElementById('outBase').textContent     = fmt(base) + '/hr';
+    document.getElementById('outBonus').textContent    = bonusMax > 0 ? fmt(bonus) + '/hr' : '—';
+    document.getElementById('outTips').textContent     = fmt(tips) + '/hr';
+    document.getElementById('outBlended').textContent  = fmt(blended) + '/hr';
+    document.getElementById('outBreakdown').textContent = bonusMax > 0
+      ? `${fmt(base)} base + ${fmt(bonus)} bonus (${Math.round(scorePct*100)}% of $${bonusMax.toFixed(2)} max) + ${fmt(tips)} tips`
+      : `${fmt(base)} base (no performance bonus) + ${fmt(tips)} tips`;
+    document.getElementById('outWeekly').textContent    = fmt0(weekly);
+    document.getElementById('outQuarterly').textContent = bonusMax > 0 ? fmt0(quarterly) : '—';
+    document.getElementById('outGate').textContent      = p.gate;
+
+    // Score label next to the slider
+    const lbl = document.getElementById('scoreLabel');
+    if (lbl) lbl.innerHTML = state.score.toFixed(1) + ' <span style="color:var(--gray-dim); font-weight:500;">/ 10</span>';
+  }
+
+  /* Wire controls */
+  document.getElementById('calcRung').addEventListener('change', e => { state.rung = e.target.value; recalc(); });
+  document.querySelectorAll('#calcHours .pill').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('#calcHours .pill').forEach(x => x.classList.remove('active'));
+      el.classList.add('active');
+      state.hrs = +el.dataset.hrs;
+      recalc();
+    });
+  });
+  document.getElementById('calcScore').addEventListener('input', e => {
+    state.score = parseFloat(e.target.value) || 0;
+    recalc();
+  });
+  document.getElementById('calcTips').addEventListener('input', e => {
+    state.tips = parseFloat(e.target.value) || 0;
+    recalc();
+  });
+
+  /* ─────────────────────────────────────────────────────────────────
+   * Boot — single-tier file, render once.
+   * ───────────────────────────────────────────────────────────────── */
+  populateCalcRungs();
+  renderBaseRaiseTable();
+  renderLadder();
+  renderInlineNumbers();
+  recalc();
+
+  /* Onboarding mode flip via URL `?mode=onboarding`.
+   * In Q3 when announcement skin is stale, body[data-mode] gets set
+   * permanently to "onboarding" and this param logic gets stripped. */
+  const params = new URLSearchParams(location.search);
+  if (params.get('mode') === 'onboarding') {
+    document.body.setAttribute('data-mode', 'onboarding');
+    document.querySelectorAll('[data-mode-onboarding-only]').forEach(el => el.style.display = '');
+    document.querySelectorAll('[data-skin="announcement"]').forEach(el => el.style.display = 'none');
+  }
+</script>
+
+</body>
+</html>
